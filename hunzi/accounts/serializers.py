@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 
 class CustomUserSerializer(serializers.ModelSerializer):
     # Validation using Charfield
+    # Consider moving these to the model
     username = serializers.CharField(min_length=3, max_length=50, allow_blank=False)
     email = serializers.EmailField(allow_blank=False)
     password = serializers.CharField(min_length=8, write_only=True)
