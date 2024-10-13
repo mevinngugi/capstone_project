@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
 from .models import Post
 from .serializers import PostSerializer
 import django_filters
 from .permissions import IsAuthorOrReadOnly
 from rest_framework.response import Response
+from accounts.models import CustomUser
 
 
 # Custom filters that returns partial search on the title and author name
@@ -47,3 +48,17 @@ class PostByCategoryView(generics.GenericAPIView):
             serializer = PostSerializer(post_by_category, many=True)
             return Response(serializer.data)
         return Response(f'No posts have been under the category {category}')
+
+
+class PostByAuthorView(generics.GenericAPIView):
+    model = Post
+
+    def get(self, request, id):
+        #import pdb; pdb.set_trace()
+        author = get_object_or_404(CustomUser, id=id)
+        post_by_author = Post.objects.filter(author=author)
+        if post_by_author:
+            serializer = PostSerializer(post_by_author, many=True)
+            return Response(serializer.data)
+        return Response('You have not yet created any posts')
+        
