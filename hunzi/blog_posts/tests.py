@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 
 # Create your tests here.
 class BlogPostAPITestCase(TestCase):
+    """Set up tests for posts and accounts model"""
 
     # Rename to setUp not setup
     def setUp(self):
@@ -106,4 +107,3 @@ class BlogPostAPITestCase(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
         response = self.client.delete(reverse('post-detail', kwargs={'pk': self.test_post.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-

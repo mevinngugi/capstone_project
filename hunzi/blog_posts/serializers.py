@@ -3,6 +3,7 @@ from .models import Post, Comment
 
 
 class PostSerializer(serializers.ModelSerializer):
+    """Serialize, Deserialize and Validate data for the Post model."""
     title = serializers.CharField(min_length=3, max_length=200, allow_blank=False)
     content = serializers.CharField(min_length=20, allow_blank=False)
     # Mark the author field as read only 
@@ -26,6 +27,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Serialize, Deserialize and Validate data for the Comment model."""
     content = serializers.CharField(min_length=3, max_length=200, allow_blank=False)
     post = serializers.CharField(read_only=True)
     author = serializers.CharField(read_only=True)

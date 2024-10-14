@@ -9,8 +9,8 @@ from accounts.models import CustomUser
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-# Custom filters that returns partial search on the title and author name
 class PostListFilter(django_filters.FilterSet):
+    """Custom filters that returns partial search on the title and author name.g"""
     published_date = django_filters.CharFilter(lookup_expr='icontains')
     category = django_filters.CharFilter(lookup_expr='icontains')
 
@@ -21,6 +21,7 @@ class PostListFilter(django_filters.FilterSet):
 
 # Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
+    """A viewSet for the Post Model."""
     # Because you are overriding the permission classes in settings.py
     # You need to pass in the IsAuthenticatedOrReadOnly to prevent
     # unauthenticated users from attempting to create a post
@@ -39,6 +40,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class PostByCategoryView(generics.GenericAPIView):
+    """A view that returns the posts grouped by category."""
     model = Post
 
     def get(self, request, category):
@@ -55,6 +57,7 @@ class PostByCategoryView(generics.GenericAPIView):
 
 
 class PostByAuthorView(generics.GenericAPIView):
+    """A view that return the posts grouped by author."""
     model = Post
 
     def get(self, request, id):
@@ -68,6 +71,7 @@ class PostByAuthorView(generics.GenericAPIView):
 
 
 class CommentView(generics.CreateAPIView):
+    """A view to create a comment and attach it to a post"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     model = Comment
     queryset = Comment.objects.all()
@@ -80,6 +84,7 @@ class CommentView(generics.CreateAPIView):
 
 
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """A view to Get, Put, Patch, Delete a comment."""
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     model = Comment
     queryset = Comment.objects.all()
