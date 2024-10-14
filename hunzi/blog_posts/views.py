@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 import django_filters
 from .permissions import IsAuthorOrReadOnly
 from rest_framework.response import Response
@@ -65,4 +65,22 @@ class PostByAuthorView(generics.GenericAPIView):
             serializer = PostSerializer(post_by_author, many=True)
             return Response(serializer.data)
         return Response('You have not yet created any posts')
-        
+
+
+class CommentView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    model = Comment
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        # import pdb; pdb.set_trace()
+        post = get_object_or_404(Post, id=self.kwargs['pk'])
+        serializer.save(author=self.request.user, post=post)
+
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+    model = Comment
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
