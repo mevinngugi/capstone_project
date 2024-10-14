@@ -6,6 +6,7 @@ import django_filters
 from .permissions import IsAuthorOrReadOnly
 from rest_framework.response import Response
 from accounts.models import CustomUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 # Custom filters that returns partial search on the title and author name
@@ -20,7 +21,10 @@ class PostListFilter(django_filters.FilterSet):
 
 # Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthorOrReadOnly]
+    # Because you are overriding the permission classes in settings.py
+    # You need to pass in the IsAuthenticatedOrReadOnly to prevent
+    # unauthenticated users from attempting to create a post
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     model = Post
     queryset = Post.objects.all()
     serializer_class = PostSerializer

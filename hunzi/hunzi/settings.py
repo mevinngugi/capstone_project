@@ -153,7 +153,9 @@ REST_FRAMEWORK = {
         ],
 
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # Change this to IsAuthenticatedOrReadOnly unauthenticated users to view posts
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
         ],
 
     # Global filter, search and ordering
