@@ -29,10 +29,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+#####################################################
+# When Deploying to production, turn these on       #
+#####################################################
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True  # Enables the X-XSS-Protection header
+    X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking by disallowing your site in iframes
+    SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents MIME type sniffing
+    CSRF_COOKIE_SECURE = True  # Ensures the CSRF cookie is only sent over HTTPS
+    CSRF_TRUSTED_ORIGINS = [os.getenv('ALLOWED_HOST', '127.0.0.1')]
+    SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+    SECURE_HSTS_PRELOAD = True  # Preload site in browsers' HSTS lists
+    SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+    CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from your own domain
+    CSP_SCRIPT_SRC = ("'self'", 'https://trustedscripts.com')
+    CSP_STYLE_SRC = ("'self'", 'https://trustedstyles.com')
+else:
+    # Use HTTP settings for local development
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    SECURE_HSTS_SECONDS = 0  # No HSTS during development
+
+#####################################################
+# End of prod configs                               #
+#####################################################
+
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST', '127.0.0.1')]
 
 
 # Application definition

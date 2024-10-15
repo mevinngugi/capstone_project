@@ -13,6 +13,7 @@ urlpatterns = [
     path('posts/<int:pk>/comments/new/', CommentView.as_view(), name='add_comment'),
     # Read, Update, Delete Comment by ID
     path('comments/<int:pk>/', CommentDetailView.as_view(), name='comment_detail'),
+    path('', PostViewSet.as_view({'get': 'list'}), name='all_posts')
 ]
 
 urlpatterns += router.urls
